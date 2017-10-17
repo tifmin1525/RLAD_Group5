@@ -1,0 +1,244 @@
+---
+title: "Week5_Tasks"
+output: 
+    html_document:
+        theme: default
+        highlight: pygments
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+R 語言與資料科學導論作業 (W5)
+=============================
+
+一般系 b96001001 未命名
+
+## Data Analysis (95%)
+
+### 請使用R的內建資料`esoph`當作練習用的資料。
+
+#### 一、請先瞭解一下這個資料的內容（`help(esoph)`）。 (15%)
+
+* 請用summary()列出這筆資料的簡單描述統計。(10%)
+* 請找出這個資料集共有幾列資料。 (5%)
+
+```{r data.descrip, echo=TRUE}
+# your code goes here
+summary(esoph)
+c(組數 = length(esoph[[1]]))
+```
+
+#### 二、資料作圖 (20%)
+
+* 請對此資料集做一張圖，任何圖（散佈圖、直方圖、或課堂上看到的散佈矩陣圖）都可以。
+
+```{r}
+# your code goes here
+plot(esoph$agegp,esoph$alcgp)
+```
+
+#### 三、請做出一個各年齡組的摘要表。 (30%)
+
+* 請製作出如下摘要表，呈現各年齡組的個案數和控制組數總和。
+* 這張摘要表應有6列，每列分別是一個年齡組 (10%)。在年齡組（agegp）變項中，請計算每組的sum_ncases，
+代表在各年齡組中，所有ncases的總和 (10%)；以及sum_ncontrols，代表在各年齡組中，所有ncontrols的總和 (10%)。
+
+最後的結果會類似這樣：
+```
+  agegp sum_ncases sum_ncontrols
+  <ord>      <dbl>         <dbl>
+1 25-34      
+2 35-44      
+3 45-54          (values)
+4 55-64      
+5 65-74      
+6   75+      
+```
+
+```{r data.age.grp, echo=TRUE}
+# your code goes here
+library(magrittr)
+library(dplyr)
+esoph %>%
+  select(agegp, ncases, ncontrols) %>%
+  group_by(agegp) %>%
+  summarise(sum_ncases = sum(ncases), sum_ncontrols = sum(ncontrols)) %>%
+  arrange((agegp))
+```
+
+#### 第四、不同酒精使用程度的摘要表。(30%)
+
+* 請製作出如下的摘要表。該摘要表呈現的是25-34和45-54兩個年齡組，他們在不同酒精使用程度中的個案數和控
+制組數總和。
+* 您需要將25-34和45-54兩個年齡組的資料取出(10%)，並按照這兩個年齡組個別的酒精使用程度將資料分組(10%)。
+最後計算個案數和控制組數的總和(10%)
+
+最後的結果會類似這樣：
+
+```
+  agegp     alcgp ncases ncontrols
+  <ord>     <ord>  <dbl>     <dbl>
+1 25-34 0-39g/day      
+2 25-34     40-79  
+3 25-34    80-119  
+4 25-34      120+     (values)
+5 45-54 0-39g/day    
+6 45-54     40-79   
+7 45-54    80-119    
+8 45-54      120+   
+```
+
+```{r data.alc.grp, echo=TRUE}
+# your code goes here
+library(magrittr)
+library(dplyr)
+esoph %>%
+  select(agegp, ncases, ncontrols, alcgp) %>%
+  group_by(agegp, alcgp) %>%
+  summarise(ncases = sum(ncases), ncontrols = sum(ncontrols)) %>%
+  arrange((agegp))
+```
+
+
+## 進階選答題
+
+[台北YouBike 開放資料](https://goo.gl/KLxuhf)是一個很常在資料科學專案應用或教學的例子。這個資料就在我們身邊，我們都接觸過他，甚至才剛剛貢獻過一點資料。這個作業請你試著接觸YouBike資料，看看裡面有什麼訊息。
+
+### A. 把YouBike資料轉為data.frame (10%)
+請你先到[台北YouBike 開放資料](https://goo.gl/KLxuhf)看一下資料描述。其中提到現在的介接網址是<http://data.taipei/youbike>。你可以直接在R裡面把這個檔案下載下來；或者手動把它下載下來後，把JSON格式換成R的data.frame。
+
+> Update (20171015):
+>
+> 因YouBike開放資料系統維護。若無法從介接網址取得資料，請從此[連結](https://goo.gl/3HqWBa)下載201710132314的JSON資料。  
+> 資料格式說明：
+> ```
+> sno：站點代號、sna：場站名稱(中文)、 tot：場站總停車格、 
+> sbi：場站目前車輛數量、 sarea：場站區域(中文)、 
+> mday：資料更新時間、 lat：緯度、 lng：經度、 ar：地(中文)、 
+> sareaen：場站區域(英文)、 snaen：場站名稱(英文)、 aren：地址(英文)、 
+> bemp：空位數量、 act：全站禁用狀態
+> ```
+
+提示：
+
+* 轉資料格式、前處理，通常是資料科學裡最麻煩的事情。有時候運氣很好，一個彎轉對了全部風平浪靜；
+但有時一個念頭轉錯了，資料會愈用愈亂。有幾個套件`rjson`、`jsonlite`、`tibble`和函數`do.call`, `rbind`, `as.numeric`可能是你會想要參考的。但依作法不同，不見得全部都用得上。
+* 若您在這個步驟遇到問題，但仍想嘗試接下來的題目，您可以從[YouBike Demo Data](https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W5_DataWrangling/youbike_demo_data.csv)開始。但依您的方法不同， 您可能還是需要有資料清理轉換的工作。
+* 以下的code chunk會幫您載入Demo Data（但您還是需手動下載Demo Data檔案，
+並放在和此檔案同一路徑下）。提醒您若使用Demo Data，
+這一小題視為未作答。若您不需要以下這段程式碼，請直接刪除即可。
+* 最後資料整理出來，應該會類似這樣（一些`_en`結尾的欄位可去除）：
+```
+# A tibble: 378 x 11
+     sno                       sna   tot   sbi  sarea                mday      lat      lng
+   <int>                     <chr> <int> <int>  <chr>              <dttm>    <dbl>    <dbl>
+ 1     1     捷運市政府站(3號出口)   180   139 信義區 2017-10-09 03:19:35 25.04086 121.5679
+ 2     2 捷運國父紀念館站(2號出口)    48    31 大安區 2017-10-09 03:19:31 25.04125 121.5574
+ 3     3                台北市政府    40    13 信義區 2017-10-09 03:19:39 25.03780 121.5652
+ 4     4                  市民廣場    60    34 信義區 2017-10-09 03:19:40 25.03604 121.5623
+ ...
+
+```
+
+```{r bike.data, echo=TRUE}
+# your code goes here.
+# please display the data frame with proper format.
+library(jsonlite)
+library(RCurl)
+#UBike_Data <- fromJSON("/Volumes/BaseQi/W5/3HqWBa.json")
+UBike_Data <- fromJSON("http://data.taipei/youbike") #讀資料
+UBF <- UBike_Data$retVal #讀值
+json_file <- lapply(UBF, function(x) {
+  x[sapply(x, is.null)] <- NA
+  unlist(x)
+})  #收起來
+#json_file <- data.frame(lapply(json_file, as.character), stringsAsFactors=FALSE)
+UBdata <- do.call("rbind",json_file) #壓起來
+UBF <- as.data.frame(UBdata) #換型態
+library(dplyr)
+UBF %>% mutate_if(is.factor, as.character) -> UBF #因為data.frame裡面都是factor, 所以先換成char 
+UBF$sno <- as.integer(UBF$sno)
+UBF$tot <- as.integer(UBF$tot)
+UBF$sbi <- as.integer(UBF$sbi)
+UBF$lat <- as.double(UBF$lat)
+UBF$lng <- as.double(UBF$lng)
+UBF$act <- as.integer(UBF$act) #各個column換成該要有的型態
+UBF
+```
+
+### B. 請按照台北各個行政區分組，計算每個行政區內，YouBike運作中站點的平均停車格數、目前車輛數、以及空位數。並且按照空位數（從小到大）排序。(5%)
+
+提示：
+
+* 資料經過A的處理後，應該已經變成一個乾淨的data frame（或tibble），您在這步僅需把幾個變項選取出來，群組、平均、排序即可。記得YouBike資料裡有一欄是全站禁用狀態（act），我們只關心運作中的站點。
+
+```{r bike-by-area, echo=TRUE}
+# your code goes here.
+# please display the data frame with proper format.
+library("magrittr") #pipe
+library("dplyr") 
+UBF %>%
+  filter(act == 1) %>%
+  select(tot, sbi, sarea) %>%
+  group_by(sarea) %>%
+  summarise(空位數 = sum(tot - sbi), 平均停車格 = mean(tot), 目前車輛數 = sum(sbi)) %>%
+  arrange(desc(空位數))
+```
+
+### C. 請篩選出空位率最高的5％站點，並且按照他們的空位率（從大到小）排序。(5%)
+
+提示：
+
+* 和上一題相似，但你需要自己計算一個新的欄位（空位率），並且要找出前5%的站點。選出前5%的資料至少有兩種可能的方法：（1）找出5%的空位率是多少，用該值去過濾資料；（2）先把資料按空位率排序之後，只取前5%的資料。兩個想法都是合理的，只是結果可能會些許不同。
+
+```{r bike-top, echo=TRUE}
+# your code goes here.
+# please display the data frame with proper format.
+library("magrittr")
+library("dplyr")
+a <- UBF %>%
+    filter(act == 1) %>%
+    select(tot, sbi, sna, lng, lat) %>%
+    group_by(sna) %>%
+    summarise(空位數 = (tot - sbi), 停車格 = (tot), 目前車輛數 = (sbi), 空位率 = 空位數/停車格) %>%
+    arrange(desc(空位率))
+head(a,19)
+a
+
+```
+
+
+### D. 請把站點的位置畫在一張地圖上，並且同時呈現每個站點的空位率。(5%)
+
+
+### 提示：
+
+* R畫圖的套件有很多，這一題只要您找到套件，剩下來就只是怎麼使用的問題。範例圖片用的是ggmap畫的，但類似功能的套件還有不少，如課堂上接觸過的leaflet，它是互動式的地圖，也是滿有趣的選擇。
+
+* 為了統一作業結果，請如範例圖用點的顏色代表空位率，這在上述套件裡應該都可以做到，但方法可能會有些不同。
+
+* 您可以參考這一張圖。您的空位率資料應該會不同，顏色、地圖樣式也可以自行選擇。
+
+
+```{r bike-map, echo=TRUE}
+# your code goes here.
+library("ggmap") # 畫圖
+library("magrittr")
+library("dplyr")
+a <- UBF %>%
+    filter(act == 1) %>%
+    select(tot, sbi, sna, lng, lat) %>%
+    group_by(sna) %>%
+    summarise(空位數 = (tot-sbi), 停車格 = (tot), 目前車輛數 = (sbi), Vacancy = 空位數/停車格, lat = lat, lng = lng) %>%
+    arrange(desc(Vacancy))
+
+map <- get_map(location = c(lon = 121.55, lon = 25.07), zoom = 13, language = "zh-TW", maptype = "roadmap") #設定圖
+ggmap(map, darken = c(0.1, "white")) + geom_point(aes(x = lng, y = lat, col = Vacancy), data = a) + 
+  geom_point() + 
+    scale_colour_gradientn(colours=rainbow(3)) #彩色bar
+
+```
+
