@@ -96,6 +96,7 @@ esoph %>%
 library(magrittr)
 library(dplyr)
 esoph %>%
+  filter(agegp == "25-34" | agegp == "45-54") %>%
   select(agegp, ncases, ncontrols, alcgp) %>%
   group_by(agegp, alcgp) %>%
   summarise(ncases = sum(ncases), ncontrols = sum(ncontrols)) %>%
