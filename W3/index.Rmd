@@ -1,0 +1,207 @@
+---
+title    : Introduction to Data Science and Text Analytics
+subtitle : lecture 01
+author   : 謝舒凱 Graduate Institute of Linguistics, NTU
+mode     : selfcontained # {standalone, draft}
+url      : {lib: "../../libraries", assets: "../../assets"}
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+lecnum   : "01"
+widgets     : [bootstrap, quiz, interactive, mathjax]  # {mathjax, shiny, bootstrap}
+ext_widgets: {rCharts: [libraries/widgets/nvd3]}
+knit     : slidify::knit2slides
+bibliography: /Users/shukai/LOPE_LexInfo/BIB/myRef.bib
+github      : {user: loperntu, repo: lads}
+
+
+
+--- bg:#FFFAF0
+## 大綱
+1. 熟悉環境
+2. 個案研究
+
+
+---
+## 課堂及時回饋測試
+
+https://sli.do (event code: `rlads3`)
+
+
+---
+## 複習這個流程
+
+> 
+- 資料前處理 Pre-processing
+- 資料探索分析與圖示 Exploratory data analysis (statistic summary/graphical representation)
+- 語言分析與標記 (Linguistic annotation and analysis)
+- 機器學習模式 Predictive modeling (regression, classification, clustering)
+- 資料呈現與回饋 Reproducible, infographic Report (`Data <> Story`)
+
+
+---
+## 基本概念 
+
+- 資料科學中的三組人馬： (Text analytics | Text mining) 、 (NLP | Linguistics) 、 (Machine Learning | Statistics)
+
+- Text analytics ($\simeq$ text mining) can be viewed as a set of **(computational) linguistic (NLP)** and **(statistical) machine learning** techniques that model and discover the information content of textual data for diffirent purposes (e.g., business intelligence, research, or investigation).
+
+- Textual **data**, textual **information**, textual **knowledge**.
+  - [Data Science] Linguistic/textual `data` processing
+  - [Natural Language Processing] Linguistic/textual `information` processing
+  - [Semantics, Ontologies, AI and Language Understanding] Linguistic/textual `knowledge` processing
+
+
+---
+## 你想自己快快往前
+
+
+- 線上教材 
+  - [資料科學與R語言](http://yijutseng.github.io/DataScienceRBook/)
+  - [R for Data Science](http://r4ds.had.co.nz/)
+  - [Text mining with R](http://tidytextmining.com/)
+- (免費)線上課程 (e.g., [DataCamp](https://www.datacamp.com/); [Coursera DS series](https://www.coursera.org/specialization/jhudatascience/1), etc)
+- 相關套件與社群支持。發揮自學精神！
+
+<img src=assets/img/datacamp.png style="width: 550px">
+
+
+
+---
+# 在你開始學習 coding 實作資料科學專案之際，同時想想
+
+- 夠環保嗎
+- 與人／社會的關聯
+- 機器會做得比我好嗎
+
+
+---
+## 例：說謊/測謊是人的本事
+
+
+<iframe width="160" height="100" src="https://www.youtube.com/embed/H0-WkpmTPrM" frameborder="0" allowfullscreen></iframe>
+
+<!--
+<iframe width="160" height="100" src="http://www.youtube.com/embed/ij5BmD4tU5c" frameborder="0" allowfullscreen></iframe>
+-->
+
+<span class="footnote"> The language of lying [Noah Zandon]()</span>
+
+
+---
+## 例二：表情符號是人類溝通中的創造力表現
+
+<img src = './assets/img/emoticon.jpeg' height="500px"></img>
+[偵測器](http://emojitracker.com/)
+
+
+
+
+---
+# 熟悉環境：你的程式與人生 
+
+>- 資料科學專案
+>- 寫科學論文、課堂報告、做投影片、寫部落格、寫書
+>- 偶爾看看股票
+>- 關心 NBA
+>- ?
+
+
+---
+## R 生態系真的很酷，夠玩掉你的青春
+
+see `lab.Rmd`
+
+
+
+---
+## Code your life 之一
+
+撰寫（可重置的 reproducible）科學報告（$\LaTeX$, `Word/PDF`, Slides）、部落格 ()、電子書 (`bookdown`)。
+
+
+
+---
+## Code your life 之二
+同時以數據心智關心自己的興趣 (e.g. 金融數據分析)
+
+```{r, message=FALSE, echo=FALSE, results='hide'}
+# install.packages("quantmod")
+require('quantmod')
+getSymbols("AMZN")
+barChart(AMZN)
+```
+
+
+---
+## 運動休閒娛樂也是
+
+Sport analytics, e.g., [Animating NBA Play by Play using R](http://curleylab.psych.columbia.edu/nba.html)
+
+<img src = './assets/img/nba.gif' height="100px"></img>
+
+
+
+
+---
+## Code your life 之三
+學習協作的點點滴滴
+
+- [Github] / [Code Editors for Real Time Collaboration](https://codegeekz.com/12-best-code-editors-for-real-time-collaboration/)
+
+<img src = './assets/img/coding.together.png' height="100px"></img>
+
+
+---
+## Code your life 之四
+讓自己置身國際獵才對象
+
+kaggle 
+
+
+---
+# 學習「品評」專案
+
+- Emoji data science in R
+https://prismoji.com/2017/02/06/emoji-data-science-in-r-tutorial/
+
+
+---
+## 案例練習時間
+
+dropbox paper links
+
+
+---
+## 苦口婆心的建議（以後再說就太遲了）
+
+- 找一個難以被(機器)取代的本事與關懷
+
+automated data scientist 
+
+rLDP 
+
+
+--- &radio
+
+## Take home message
+
+以下那個行業不會被取代？
+
+1. _語言學家_
+2. 資料科學家
+3. 程式設計師
+4. 流行音樂製作人
+
+*** .hint
+
+我也沒有標準答案
+
+*** .explanation
+
+為什麼？因為老師是語言學家 XD
+
+
+
+
+
+

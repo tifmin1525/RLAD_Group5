@@ -1,0 +1,130 @@
+---
+title: "R Notebook"
+author: "YOU"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+
+
+# 寫科學論文
+
+$$T^{\mu\nu}=\begin{pmatrix}
+\varepsilon&0&0&0\\
+0&\varepsilon/3&0&0\\
+0&0&\varepsilon/3&0\\
+0&0&0&\varepsilon/3
+\end{pmatrix},
+$$
+
+I propose to save the world using this formular:
+$$P_\omega={n_\omega\over 2}\hbar\omega\,{1+R\over 1-v^2}\int\limits_{-1}^{1}dx\,(x-v)|x-v|,
+$$
+
+
+# 金融興趣
+
+```{r, message=FALSE, echo=FALSE, results='hide'}
+# install.packages("quantmod")
+require('quantmod')
+getSymbols("AMZN")
+head(AMZN)
+barChart(AMZN)
+# K
+chartSeries(AMZN)
+```
+
+
+
+# 娛樂休閒
+
+[BallR: Interactive NBA Shot Charts with R and Shiny](https://github.com/toddwschneider/ballr)
+選擇球員、賽季、繪圖樣式，計算該球員在球場上每個區域的投籃命中率，並與聯盟平均值做比較，然後產生整個球場的射籃資料分佈圖。
+
+
+
+# 各種動態呈現
+
+
+
+## DataTables
+
+```{r}
+#install.packages('DT')
+library(DT)
+datatable(iris)
+```
+
+## Leaflet Maps
+
+- Q1: 改成醉月湖 
+
+```{r}
+library(leaflet)
+m = leaflet() %>% addTiles()
+m  # a map with the default OSM tile layer
+
+m = m %>% setView(-93.65, 42.0285, zoom = 17)
+# popup
+m %>% addPopups(-93.65, 42.0285, 'Here is the <b>Department of Statistics</b>, ISU')
+rand_lng = function(n = 10) rnorm(n, -93.65, .01)
+rand_lat = function(n = 10) rnorm(n, 42.0285, .01)
+
+# use automatic bounds derived from lng/lat data
+m = m %>% clearBounds()
+# marker
+m %>% addMarkers(rand_lng(), rand_lat())
+```
+
+## Dygraphs
+
+```{r}
+library(dygraphs)
+dygraph(sunspots) %>% dyRangeSelector()
+lungDeaths <- cbind(mdeaths, fdeaths)
+dygraph(lungDeaths)
+```
+
+## Network graphs
+
+```{r}
+library(networkD3)
+data(MisLinks, MisNodes)
+str(MisLinks)
+str(MisNodes)
+forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = "source",
+             Target = "target", Value = "value", NodeID = "name",
+             Group = "group", opacity = 0.4)
+```
+
+## Three.js
+
+```{r}
+library(threejs)
+data(world.cities, package="maps")
+cities <- world.cities[order(world.cities$pop,decreasing=TRUE)[1:1000],]
+value  <- 100 * cities$pop / max(cities$pop)
+
+earth <- texture(system.file("images/world.jpg",package="threejs"))
+globejs(img=earth, lat=cities$lat, long=cities$long, value=value)
+```
+
+
+# Web application
+
+`File` > `New File` > `shiny web app`
+
+
+
