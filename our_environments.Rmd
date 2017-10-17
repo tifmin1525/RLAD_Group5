@@ -1,0 +1,15 @@
+---
+title: "R Notebook"
+output:
+  html_document: default
+  html_notebook: default
+  word_document: default
+---
+```{R}
+list ("Eddy" = "x86_64-apple-darwin15.6.0 (64-bit)",
+      "柏婷" = "x86_64-apple-darwin13.4.0 (64-bit)",
+      "柏賢" = "x86_64-w64-mingw32/x64 (64-bit)",
+      "Yolanda" = "x86_64-apple-darwin15.6.0 (64-bit)"
+      
+  )
+```
