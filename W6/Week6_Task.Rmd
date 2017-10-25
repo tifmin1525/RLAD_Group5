@@ -79,7 +79,7 @@ DATA
 ### 二、請將該資料作折線圖。(10%)
 
 請用折線圖呈現上一題data.frame的資料。以下圖形僅供參考，配色、樣式等不需相同。
-![](vix_ref.png)
+
 
 #### 評分標準：
 
@@ -133,8 +133,8 @@ plot(DATA$date,DATA$settle,type = "l",main = "Cboe S&P 500 Volatility Index (VIX
 # your code goes here (number of characters)
 TXT <- readr::read_file(url("https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W6_TextTextText/data/confucius.txt"))
 TXT <- gsub("\n", "", TXT)
-TXT <- gsub("、", "", TXT)
-TXT <- gsub("﹑", "", TXT)
+#TXT <- gsub("、", "", TXT)
+#TXT <- gsub("﹑", "", TXT)
 TXT <- strsplit(TXT, split = "")
 length(TXT[[1]])
 
@@ -179,7 +179,7 @@ TXTData
 
 請將上一題製作的data.frame繪製成圖形，圖形形式不拘。以下圖形僅供參考：
 
-![](char_freq_ref.png)
+
 
 #### 評分標準：
 
@@ -222,7 +222,6 @@ wordcloud2(TXTData[1:150,])
 ```
 
 * 把上述的data.frame繪製成圖形。圖形形式不拘，您也可以選擇其他繪圖套件。
-![](play_by_play_ref.png)
 
 #### 評分標準：
 
@@ -247,13 +246,27 @@ a = NULL
 b = NULL
 for(i in 1:length(CPBLA)){
   m <- gregexpr(pat, CPBLA[[i]][1], perl = T)
+  M <- gregexpr(pat, CPBLA[[i]][2], perl = T)
   a[[i]] <- regmatches(CPBLA[[i]][1], m)
-  b[[i]] <- regmatches(CPBLA[[i]][2], m)
+  b[[i]] <- regmatches(CPBLA[[i]][2], M)
 }
-for(i in)
-a
+aa = NULL
+bb = NULL
+for(i in 1:9){
+  aa[i] = length(a[[i]][[1]])
+  bb[i] = length(b[[i]][[1]])
+}
+
+LIST <- list(inning = 1:9, visiting = aa, host = bb )
+LIST <- as.data.frame(LIST)
+LIST$inning <- as.factor(LIST$inning)
+LIST
 ```
 
 ```{r play.chart, echo=TRUE}
 # charting
+plot(LIST$inning,LIST$visiting, type = "p", ylim = c(1,10), main = "visiting  ——    VS       host o")
+lines(LIST$inning,LIST$host, type = "p", main = "host")
+
+
 ```
