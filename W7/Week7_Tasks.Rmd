@@ -1,0 +1,150 @@
+---
+title: "Week7_Task"
+output: 
+    html_document:
+        theme: default
+        highlight: pygments
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set()
+```
+
+```{r env.setup, echo=TRUE, message=FALSE, warning=FALSE}
+# your environment setup
+```
+
+R 語言與資料科學導論作業 (W7)
+=============================
+
+一般系 b96001001 未命名
+
+## We Are Friends (95%)
+
+### F.R.I.E.N.D.S episode list
+
+「六人行」（[Friends](http://www.imdb.com/title/tt0108778/)）是1994-2004在NBC播出的喜劇影集，描述六名主角Ross, Rachel, Chandler, Monica, Phoebe和Joey在紐約生活的故事。據說，六人行也是很多人學習英文聽力的管道之一。
+
+六人行每集的標題都是以The one with ...開頭。
+請下載[檔案](https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W7_CorpusAlive/friends_episodes.txt)，包含六人行共236集的標題名稱。並用課堂上所講到的方法（或參考[LetItGo](LetItGo.Rmd)範例），把每個標題當成一個文件，
+用tm製作一個六人形影集標題語料庫。
+
+
+### 一、請將資料讀入VCorpus。 (40%)
+
+請您依序完成以下步驟：
+
+1. 讀入文字檔，若您用`read_file`函數讀文字檔，記得用`strsplit`將每一行都分開來。 (10%)
+2. 將所有英文字都變成小寫，你可能會用到的函數是`content_transformer(tolower)`。 (10%)
+3. 為了讓一個詞的詞頻能包含其各種詞形變化，我們需要做stemming，您可以參考`stemDocument` (10%)
+4. 在這個分析中，我們並不在意高頻詞的出現次數（例如the, of, with）。
+所以請用`removeWords`和`stopwords("english")`把英文高頻詞移除。 (10%)
+
+```{r friends.read, echo=TRUE}
+# your code goes here.
+library(magrittr)
+library(readr)
+library(tm)
+TXT <- read_file(url("https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W7_CorpusAlive/friends_episodes.txt"))
+TXT <- strsplit(TXT, split = "\n")
+```
+
+當您準備好VCorpus之後，請用以下這兩行指令把結果呈現出來：
+
+```{r friends.read.res, echo=TRUE, error=TRUE}
+# assuming the variable for VCorpus is `vc`
+vc <- VCorpus(VectorSource(TXT)) %>%
+      tm_map(content_transformer(tolower)) %>%
+      tm_map(stemDocument) %>%
+      tm_map(removeWords, stopwords("english"))
+vc
+inspect(vc[1:5])
+```
+
+### 二、製作文章詞彙矩陣（DocumentTermMatrix） (15%)
+```{r friends.tdm, echo=TRUE}
+# your code goes here.
+dtm <- DocumentTermMatrix(vc)
+```
+
+當您準備好文章詞彙矩陣後之後，請用以下這行指令把結果呈現出來：
+```{r friends.dtm.res, echo=TRUE, error=TRUE}
+# assuming the variable for DocumentTermMatrix is `dtm`
+inspect(dtm)
+```
+
+### 三、找出在這份語料中，出現頻率在8次(含)以上的詞，並計算他們的頻率。(40%)
+
+提示：
+
+1. `tm`的文章詞彙矩陣是一個稀疏矩陣（sparse matrix），不適用於`colSums`和`rowSums`。
+2. 您可以試試看`findFreqTerm`，在語料庫中尋找常出現的詞彙。 (10%)
+3. 當您找到所有的常用詞彙後，把這些詞彙在矩陣中的次數挑選出來（透過indexing）
+，並將每個詞彙的次數各自加總，之後得到每個詞彙的出現次數。(20%)
+4. 最後請把這些詞彙按照出現次數，由高到低順序呈現出來。 (10%)
+5. (Update: 20171029) 由於語料經過Stemming，所以最後的結果可能不是一般習慣的「詞」。
+例如phoebe經過Stemming會變成phoeb，這是正常的結果。若您有興趣知道為什麼會這樣
+，可以參考[Wikipedia](https://en.wikipedia.org/wiki/Stemming)。
+
+```{r friends.word.freq, echo=TRUE}
+# your code goes here.
+freq <- findFreqTerms(dtm,8)
+freq_vec <- freq_vec <- sapply(freq, function(x){sum(dtm[, x])})
+freq_vec <- freq_vec[order(-freq_vec)]
+freq_vec
+```
+
+## 進階選答題 (20%)
+
+2017年的國慶日難得的有四天假，同學一定有很多的回憶。但我們沒有同學的假期回憶錄，
+所以只好拿10/10當天的總統文告當作練習文本。
+
+請在這個[連結](https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W7_CorpusAlive/president_20171010.txt)
+下載國慶文告文字檔。並用課堂上的方法，用jiebaR內建辭典，幫這個文字檔斷詞，並製作出詞頻表和文字雲。
+
+提示：
+
+* 請忽略出現次數在5次以下的詞。
+* 內建的辭典可能會有很多斷錯的狀況，但這只是練習，請忽略那些錯誤。
+
+### 一、斷詞 (10%)
+```{r president.seg, echo=TRUE}
+# your code goes here.
+library(jiebaR)
+TXT <- read_file(url("https://raw.githubusercontent.com/RLadsNTU/RLadsLab/master/W7_CorpusAlive/president_20171010.txt"))
+TXT <- gsub("\n","", TXT)
+seq <- worker(stop_word = "/Library/Frameworks/R.framework/Versions/3.4/Resources/library/jiebaRD/dict/stop_words.utf8")
+TXT <- seq[TXT]
+```
+
+當您斷詞後，請用以下這行指令把結果呈現出來：
+```{r president.seg.res, echo=TRUE, error=TRUE}
+# assuming the variable for word segments is `words`
+TXT[1:20]
+```
+
+### 二、找出所有出現次數超過5次的詞，並把這些詞和其出現次數列出來 (5%)
+```{r president.tetragram, echo=TRUE}
+# your code goes here.
+library(magrittr)
+library(dplyr)
+TXT <- TXT %>%
+  freq %>%
+  arrange(desc(freq)) 
+colnames(TXT) <- c("Word","Freq")
+head(TXT,5)
+```
+
+
+### 三、畫出文字雲（請去掉最高頻詞） (5%)
+
+文字雲是常常拿來呈現文字頻率資料的方式。您可以直接用`wordcloud2`來製作文字雲。
+為了讓文字雲看起來美觀些，請直接去掉最高頻的詞（通常都是「的」），讓文字雲中的詞頻比較均勻一點。
+
+
+```{r president.bigram.wordcloud, echo=TRUE}
+# your code goes here.
+library(wordcloud2)
+wordcloud2(TXT[2:length(TXT[[1]]),],size = 0.7)
+```
