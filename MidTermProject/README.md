@@ -1,4 +1,4 @@
-*PNG*
+*PNG*  
   Resolution : 800 x 500
 
 
