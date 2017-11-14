@@ -19,5 +19,5 @@
   BBCT : likes_count < 3000  
     
     
-  #posts#  
+  #posts#  
   posts : 500  
