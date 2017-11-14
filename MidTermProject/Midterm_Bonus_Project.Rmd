@@ -1,0 +1,92 @@
+---
+title: "Midterm Bonus Project"
+author: "Group5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r need}
+library(Rfacebook)
+library(dplyr)
+library(magrittr)
+fb_oauth <- fbOAuth(
+  app_id = "125584644779971",                          # 填入應用程式編號
+  app_secret = "0a0e8a552fd762b4f6eda05bdccd1ac6")     # 填入應用程式密鑰    
+
+save(fb_oauth, file="fb_oauth")
+load("fb_oauth")
+```
+
+```{r FBvest}
+BBC <- getPage(page = "bbcnews", token = fb_oauth, n=500, until='2017/11/07') 
+CNN <- getPage(page = "cnn", token = fb_oauth, n=500, until='2017/11/07')
+UDN <- getPage(page = "udnplus", token = fb_oauth, n=500, until='2017/11/07')
+BBCT <- getPage(page= "bbctrad", token = fb_oauth, n=500, until='2017/11/07')
+```
+
+
+```{r gettime}
+BBC$created_time <- gsub(":\\d+:\\d\\d\\+0000", "", BBC$created_time)
+BBC$created_time <- gsub("\\d+-\\d+-\\d+T", "", BBC$created_time)
+CNN$created_time <- gsub(":\\d+:\\d\\d\\+0000", "", CNN$created_time)
+CNN$created_time <- gsub("\\d+-\\d+-\\d+T", "", CNN$created_time)
+UDN$created_time <- gsub(":\\d+:\\d\\d\\+0000", "", UDN$created_time)
+UDN$created_time <- gsub("\\d+-\\d+-\\d+T", "", UDN$created_time)
+BBCT$created_time <- gsub(":\\d+:\\d\\d\\+0000", "", BBCT$created_time)
+BBCT$created_time <- gsub("\\d+-\\d+-\\d+T", "", BBCT$created_time)
+```
+
+
+```{r BBC}
+BBC1 <- BBC %>%
+  filter(likes_count < 15000) %>%
+  select(created_time, likes_count) %>%
+  group_by(created_time) %>%
+  arrange(desc(likes_count))
+boxplot(BBC1$likes_count~BBC1$created_time, ylab = "likes", xlab = "time(hour)", maon = "BBC")
+```
+
+```{r CNN}
+CNN1 <- CNN %>%
+  filter(likes_count < 15000) %>%
+  select(created_time, likes_count) %>%
+  group_by(created_time) %>%
+  arrange(desc(likes_count))
+boxplot(CNN1$likes_count~CNN1$created_time,ylab = "likes", xlab = "time(hour)", main = "CNN")
+```
+
+```{r UDN}
+UDN1 <- UDN %>%
+  filter(likes_count < 15000) %>%
+  select(created_time, likes_count) %>%
+  group_by(created_time) %>%
+  arrange(desc(likes_count))
+UDN1$created_time <- as.integer(UDN1$created_time)
+UDN1$created_time <- UDN1$created_time + 8
+for(i in 1:length(UDN1$created_time)){
+  if (UDN1$created_time[i] > 23) {UDN1$created_time[i] = UDN1$created_time[i] - 24}
+}
+boxplot(UDN1$likes_count~UDN1$created_time, ylab = "likes", xlab = "time(hour)" , main = "udnplus")
+
+```
+
+
+```{r BBCT}
+BBCT1 <- BBCT %>%
+  filter(likes_count < 3000) %>%
+  select(created_time, likes_count) %>%
+  group_by(created_time) %>%
+  arrange(desc(likes_count))
+BBCT1$created_time <- as.integer(BBCT1$created_time)
+BBCT1$created_time <- BBCT1$created_time + 8
+for(i in 1:length(BBCT1$created_time)){
+  if (BBCT1$created_time[i] > 23) {BBCT1$created_time[i] = BBCT1$created_time[i] - 24}
+}
+boxplot(BBCT1$likes_count~BBCT1$created_time, ylab = "likes", xlab = "time(hour)", main = "BBC Trad")
+
+```
+
