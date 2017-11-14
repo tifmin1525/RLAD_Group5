@@ -18,4 +18,6 @@
   UDN : likes_count < 15000  
   BBCT : likes_count < 3000  
     
-  posts : 500  
+    
+  #posts#  
+  posts : 500  
