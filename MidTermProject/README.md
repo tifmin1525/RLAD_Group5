@@ -26,7 +26,7 @@ output: html_document
   
   
 *Data Processing*  
-  #time#  
+  # time #  
   post$created_time -> chop off to hours ( EX: 08:20:35 -> 08:00:00)  
   
 
@@ -35,12 +35,12 @@ output: html_document
     
   date until : 2017/ 11/ 07  
     
-  #likes_count#  
+  # likes_count #  
   BBC : likes_count < 15000  
   CNN : likes_count < 15000  
   UDN : likes_count < 15000  
   BBCT : likes_count < 3000  
     
     
-  #posts#  
+  # posts #  
   posts : 500  
