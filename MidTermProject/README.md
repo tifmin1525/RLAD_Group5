@@ -21,11 +21,11 @@ output: html_document
 
 
 
-*PNG*  
-  Resolution : 800 x 500
+#### PNG  
+  >Resolution : 800 x 500
   
   
-*Data Processing*  
+#### Data Processing
   # time #  
   post$created_time -> chop off to hours ( EX: 08:20:35 -> 08:00:00)  
   
