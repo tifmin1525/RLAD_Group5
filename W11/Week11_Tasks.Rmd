@@ -1,0 +1,88 @@
+---
+title: "[W11] Data Visualization"
+author: "生技系 b05b02048  楊崴光"
+output: 
+    html_document:
+        theme: default
+        highlight: pygments
+
+---
+
+```{r env.setup, echo=TRUE, message=FALSE, warning=FALSE}
+# your environment setup
+library(ggplot2)
+```
+
+R 語言與資料科學導論作業 (W11)
+=============================
+
+生技系 b05b02048  楊崴光
+
+## 資料視覺化 (120%)
+
+* 請繪製兩個資料視覺化的圖形。
+* 除了不能與作業格式的範例圖形重複外，這兩個圖形沒有任何限制。作業目的只是讓同學練習用R做資料視覺化。
+您也可以自由使用其他套件，不一定只能使用ggplot2。
+* 您可以從課程投影片或網路資源（如
+[ggplot extension gallery](http://www.ggplot2-exts.org/gallery/)
+或
+[R graph gallery](https://www.r-graph-gallery.com/) 或其他網站）的參考材料直接複製貼上程式碼。
+但當然歡迎您能夠以範例程式當作基礎，換個顏色、格式，甚至換個資料、換個方法繪製出全新的圖形。
+
+```{r vis.sample, warning=FALSE}
+ggplot(diamonds, aes(x=carat, y=price, color=clarity)) +
+geom_point() + 
+geom_smooth(method="lm", formula=y~poly(x, 2), color="black") + 
+ylim(0, 20000) + 
+facet_wrap(~clarity) +
+ggtitle("An data visualization example")
+```
+
+### 1. 資料視覺化A (60%)
+
+```{r vis.A}
+# your code goes here
+library(leaflet)
+ 
+# Background 1: NASA
+m=leaflet() %>% addTiles() %>% setView( lng = 121, lat = 23, zoom = 5 ) %>% addProviderTiles("NASAGIBS.ViirsEarthAtNight2012")
+m
+
+# Background 2: World Imagery
+m=leaflet() %>% addTiles() %>% setView( lng = 121, lat = 23, zoom = 6 ) %>% addProviderTiles("Esri.WorldImagery")
+m
+```
+
+### 2. 資料視覺化B (60%)
+
+```{r vis.B}
+# your code goes here
+library(ggplot2)
+ 
+# make data
+data=data.frame(group=c("A ","B ","C ","D ") , value=c(33,62,56,67) )
+ 
+# Usual bar plot :
+#ggplot(data, aes(x = group, y = value ,fill = group )) + 
+#    geom_bar(width = 0.85, stat="identity")
+    
+# Circular one
+ggplot(data, aes(x = group, y = value ,fill = group)) + 
+    geom_bar(width = 0.85, stat="identity") +    
+    
+    # To use a polar plot and not a basic barplot
+    coord_polar(theta = "y") +    
+    
+    #Remove useless labels of axis
+    xlab("") + ylab("") +
+    
+    #Increase ylim to avoid having a complete circle
+    ylim(c(0,75)) + 
+    
+    #Add group labels close to the bars :
+    geom_text(data = data, hjust = 1, size = 3, aes(x = group, y = 0, label = group)) +
+    
+    #Remove useless legend, y axis ticks and y axis text
+    theme(legend.position = "none" , axis.text.y = element_blank() , axis.ticks = element_blank())
+ 
+```
